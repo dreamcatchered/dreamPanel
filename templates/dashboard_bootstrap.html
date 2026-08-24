@@ -1,680 +1,1841 @@
 <!DOCTYPE html>
+
 <html lang="ru">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+
     <title>dreamPanel</title>
+
     <!-- Favicon и иконки через API -->
+
     <link rel="icon" type="image/x-icon" href="https://api.dreampartners.online/icons/dreampanel/favicon.ico">
+
     <link rel="icon" type="image/png" sizes="16x16" href="https://api.dreampartners.online/icons/dreampanel/favicon-16x16.png">
+
     <link rel="icon" type="image/png" sizes="32x32" href="https://api.dreampartners.online/icons/dreampanel/favicon-32x32.png">
+
     <link rel="icon" type="image/png" sizes="48x48" href="https://api.dreampartners.online/icons/dreampanel/favicon-48x48.png">
+
     <link rel="apple-touch-icon" sizes="180x180" href="https://api.dreampartners.online/icons/dreampanel/apple-touch-icon.png">
+
     <link rel="icon" type="image/png" sizes="192x192" href="https://api.dreampartners.online/icons/dreampanel/android-chrome-192x192.png">
+
     <link rel="icon" type="image/png" sizes="512x512" href="https://api.dreampartners.online/icons/dreampanel/android-chrome-512x512.png">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <link href="/static/fonts/manrope.css" rel="stylesheet">
+
     <!-- CodeMirror (editor like ISPmanager) -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/eclipse.min.css">
+
     <style>
+
         :root {
+
             --bs-primary: #000000;
+
             --bs-secondary: #6c757d;
+
         }
-        
+
         body {
+
             background-color: #f8f9fa;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+
         }
-        
+
         /* Sidebar Styles for Desktop */
+
         @media (min-width: 768px) {
+
             .sidebar {
+                overflow-y: auto !important;
+                height: 100vh !important;
+                overflow-y: auto; max-height: 100vh;
+                overflow-y: auto; max-height: 100vh;
+
                 position: fixed;
+
                 top: 0;
+
                 bottom: 0;
+
                 left: 0;
+
                 z-index: 100;
+
                 padding: 0;
+
                 box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+
                 background-color: #ffffff;
+
                 width: 240px;
+
             }
-            
+
             .main-content {
+
                 margin-left: 240px;
+
                 padding: 20px;
+
             }
-            
+
             .navbar-mobile {
+
                 display: none !important;
+
             }
+
         }
 
         /* Sidebar Styles for Mobile (Offcanvas adjustments) */
+
         @media (max-width: 767.98px) {
+
             .sidebar {
+                overflow-y: auto !important;
+                height: 100vh !important;
+                overflow-y: auto; max-height: 100vh;
+                overflow-y: auto; max-height: 100vh;
+
                 width: 280px; /* Wider sidebar on mobile for better touch targets */
+
             }
-            
+
             .main-content {
+
                 padding: 15px;
+
                 margin-top: 56px; /* Height of navbar */
+
             }
+
         }
 
         .sidebar .nav-link {
+
             font-weight: 500;
+
             color: #333;
+
             padding: 12px 20px;
+
             display: flex;
+
             align-items: center;
+
             gap: 12px;
+
             border-left: 4px solid transparent;
+
         }
-        
+
         .sidebar .nav-link:hover {
+
             background-color: #f8f9fa;
+
             color: #000;
+
         }
 
         .sidebar .nav-link.active {
+
             color: #007bff;
+
             background-color: #f0f7ff;
+
             border-left-color: #007bff;
+
         }
 
         .sidebar-header {
+
             padding: 1.5rem 1.25rem;
+
             border-bottom: 1px solid #eee;
+
         }
 
         /* Navbar for mobile */
+
         .navbar-mobile {
+
             background-color: #ffffff;
+
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
             height: 56px;
+
         }
 
         /* Common Styles */
+
         .stat-card {
+
             border: none;
+
             border-radius: 12px;
+
             padding: 20px;
+
             margin-bottom: 20px;
+
             background: #ffffff;
+
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+
             transition: transform 0.2s;
+
             height: 100%;
+
         }
-        
+
         .stat-value {
+
             font-size: 28px;
+
             font-weight: 700;
+
             color: #212529;
+
             line-height: 1.2;
+
         }
-        
+
         .table-responsive {
+
             background: white;
+
             border-radius: 12px;
+
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+
             padding: 0;
-            overflow: hidden;
+
+            overflow-x: auto;
+
             margin-bottom: 1rem;
+
         }
-        
+
         .table th {
+
             border-top: none;
+
             background-color: #f8f9fa;
+
             font-weight: 600;
+
             padding: 15px;
+
             white-space: nowrap;
+
         }
-        
+
         .table td {
+
             padding: 15px;
+
             vertical-align: middle;
+
         }
-        
+
         .btn-black {
+
             background: #212529;
+
             color: #ffffff;
+
             border: none;
+
             padding: 8px 16px;
+
             border-radius: 6px;
+
         }
-        
+
         .btn-black:hover {
+
             background: #000000;
+
             color: #ffffff;
+
         }
-        
+
         .toast-container {
+
             z-index: 1060;
+
         }
-        
+
         .file-item {
+
             cursor: pointer;
+
             padding: 12px;
+
             border-bottom: 1px solid #f0f0f0;
+
             display: flex;
+
             align-items: center;
+
         }
+
         .file-item:hover { background-color: #f8f9fa; }
+
         .file-icon { font-size: 1.4rem; margin-right: 12px; width: 30px; text-align: center; }
+
         .folder-icon { color: #ffc107; }
+
         .file-icon-default { color: #6c757d; }
 
         /* CodeMirror inside Bootstrap modal */
+
         .CodeMirror {
+
             height: 65vh;
+
             font-size: 12px;
+
             padding-left: 0 !important;
+
         }
-        
+
         .CodeMirror-gutters {
+
             border-right: 1px solid #ddd !important;
+
             background-color: #f7f7f7 !important;
+
             width: 3.5em !important;
+
         }
-        
+
         .CodeMirror-linenumber {
+
             padding-right: 8px !important;
+
             min-width: 3em !important;
+
             text-align: right !important;
+
         }
-        
+
         .CodeMirror-lines {
+
             padding-left: 0 !important;
+
             margin-left: 3.5em !important;
+
         }
-        
+
         .CodeMirror-scroll {
+
             padding-left: 0 !important;
+
         }
-        
+
         .CodeMirror-sizer {
+
             margin-left: 3.5em !important;
+
         }
 
         /* Breadcrumb: кликабельные, но не синие и без подчеркивания */
+
         #file-breadcrumbs .breadcrumb-link {
+
             color: inherit !important;
+
             text-decoration: none !important;
+
             cursor: pointer;
+
         }
+
         #file-breadcrumbs .breadcrumb-link:hover {
+
             color: #000 !important;
+
             text-decoration: none !important;
+
             opacity: 0.85;
+
         }
+
         #file-breadcrumbs {
+
             flex-wrap: nowrap;
+
             overflow-x: auto;
+
             -webkit-overflow-scrolling: touch;
+
         }
+
         #file-breadcrumbs .breadcrumb-item {
+
             flex: 0 0 auto;
+
         }
+
         .breadcrumb-item.active {
+
             color: #6c757d;
+
         }
 
         /* Wizard steps */
+
         .wizard-step {
+
             min-height: 300px;
+
         }
+
         .wizard-step .form-label {
+
             font-weight: 500;
+
         }
 
         /* iOS-like switch for systemd autostart */
+
         .service-autostart-switch .form-check-input,
+
         .service-state-switch .form-check-input {
+
             width: 2.6em;
+
             height: 1.4em;
+
             margin-top: 0;
+
             cursor: pointer;
+
             /* off = красный (disabled autostart) */
+
             background-color: #dc3545;
+
             border-color: #dc3545;
+
         }
+
         .service-autostart-switch .form-check-input:checked,
+
         .service-state-switch .form-check-input:checked {
+
             /* on = зелёный (enabled autostart) */
+
             background-color: #198754;
+
             border-color: #198754;
+
         }
+
         .service-autostart-switch .form-check-input:focus,
+
         .service-state-switch .form-check-input:focus {
+
             box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.15);
+
         }
+
         .service-autostart-switch .form-check-input:not(:checked):focus,
+
         .service-state-switch .form-check-input:not(:checked):focus {
+
             box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+
         }
+
         .service-autostart-switch .form-check-input:disabled,
+
         .service-state-switch .form-check-input:disabled {
+
             background-color: #e9ecef;
+
             border-color: #e9ecef;
+
             opacity: 0.6;
+
             cursor: not-allowed;
+
         }
 
         /* Icon card hover effect */
+
         .icon-card-hover:hover .icon-hover-overlay {
+
             opacity: 1 !important;
+
         }
+
         .icon-hover-overlay {
+
             border-radius: 0.375rem;
+
         }
+
+        /* Dream API Project Cards */
+
+        .proj-card {
+
+            background: #fff;
+
+            border: 1px solid #e9ecef;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            transition: box-shadow 0.2s, transform 0.15s;
+
+            position: relative;
+
+            height: 100%;
+
+        }
+
+        .proj-card:hover {
+
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+
+            transform: translateY(-2px);
+
+        }
+
+        .proj-card .proj-icon-wrap {
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 10px;
+
+            background: #f0f7ff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 1.4rem;
+
+            color: #0d6efd;
+
+            margin-bottom: 10px;
+
+            flex-shrink: 0;
+
+        }
+
+        .proj-card .proj-icon-img {
+
+            width: 32px;
+
+            height: 32px;
+
+            object-fit: contain;
+
+        }
+
+        .proj-card .proj-title {
+
+            font-weight: 700;
+
+            font-size: 0.95rem;
+
+            margin-bottom: 2px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+        .proj-card .proj-desc {
+
+            font-size: 0.8rem;
+
+            color: #6c757d;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+        .proj-card .proj-url {
+
+            font-size: 0.75rem;
+
+            color: #0d6efd;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+            display: block;
+
+            text-decoration: none;
+
+        }
+
+        .proj-card .proj-actions {
+
+            display: flex;
+
+            gap: 6px;
+
+            margin-top: 12px;
+
+        }
+
+        .icon-picker-btn {
+
+            width: 40px;
+
+            height: 40px;
+
+            border-radius: 8px;
+
+            border: 1px solid #dee2e6;
+
+            background: #f8f9fa;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            cursor: pointer;
+
+            font-size: 1.1rem;
+
+            transition: background 0.15s, border-color 0.15s;
+
+        }
+
+        .icon-picker-btn:hover,
+
+        .icon-picker-btn.selected {
+
+            background: #0d6efd;
+
+            color: #fff;
+
+            border-color: #0d6efd;
+
+        }
+
+        #api-status-badge .badge {
+
+            font-size: 0.8rem;
+
+            padding: 6px 10px;
+
+        }
+
     </style>
+
 </head>
+
 <body>
+
     <!-- Mobile Navbar -->
+
     <nav class="navbar fixed-top navbar-mobile d-md-none px-3">
+
         <div class="d-flex align-items-center w-100">
+
             <button class="btn btn-link p-0 me-3 text-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+
                 <i class="bi bi-list fs-2"></i>
+
             </button>
+
             <span class="navbar-brand mb-0 h1 fw-bold text-dark">🚀 dreamPanel</span>
+
         </div>
+
     </nav>
 
     <!-- Sidebar (Offcanvas on mobile, static on desktop) -->
+
     <div class="offcanvas-md offcanvas-start sidebar" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+
         <div class="offcanvas-header border-bottom">
+
             <h5 class="offcanvas-title fw-bold" id="sidebarMenuLabel">🚀 dreamPanel</h5>
+
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+
         </div>
+
         <div class="offcanvas-body d-flex flex-column h-100 p-0">
+
             <div class="sidebar-header d-none d-md-block">
+
                 <h4 class="mb-0 fw-bold">🚀 dreamPanel</h4>
+
             </div>
-            
+
             <ul class="nav flex-column py-2">
+
                 <li class="nav-item">
+
                     <a class="nav-link active" href="#" data-section="dashboard">
+
                         <i class="bi bi-speedometer2"></i> Dashboard
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="services">
+
                         <i class="bi bi-hdd-stack"></i> Сервисы
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="bots">
+
                         <i class="bi bi-robot"></i> Боты
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-section="proxy">
+
+                    
+                <a class="nav-link" href="#" data-section="settings">
+                    <i class="bi bi-gear"></i> Настройки панели
+                </a>
+<a class="nav-link" href="#" data-section="proxy">
+
                         <i class="bi bi-diagram-3"></i> Прокси
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="sites">
+
                         <i class="bi bi-globe"></i> Сайты
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
+                    <a class="nav-link" href="#" data-section="domains">
+
+                        <i class="bi bi-cloud-check"></i> Домены (DNS)
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="files">
+
                         <i class="bi bi-folder2-open"></i> Файлы
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="nginx">
+
                         <i class="bi bi-file-earmark-code"></i> Nginx
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="ssl">
+
                         <i class="bi bi-shield-check"></i> SSL
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="backups">
+
                         <i class="bi bi-archive"></i> Бэкапы
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="security">
+
                         <i class="bi bi-shield-exclamation"></i> Безопасность
+
                     </a>
+
                 </li>
+
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="projects">
+
                         <i class="bi bi-collection"></i> Проекты
+
                     </a>
+
                 </li>
+
+                {% if console_enabled %}
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="console">
+
                         <i class="bi bi-terminal"></i> Консоль
+
                     </a>
+
                 </li>
+                {% endif %}
+
+                {% if microservices_enabled %}
                 <li class="nav-item">
+
                     <a class="nav-link" href="#" data-section="microservices">
+
                         <i class="bi bi-grid-3x3-gap"></i> Микросервисы
+
                     </a>
+
                 </li>
+                {% endif %}
+
             </ul>
-            
+
             <div class="mt-auto border-top p-3">
+
                 <a class="nav-link text-danger rounded" href="/logout">
+
                     <i class="bi bi-box-arrow-right"></i> Выход
+
                 </a>
+
                 <a class="nav-link" href="/status" target="_blank">
+
                     <i class="bi bi-activity"></i> Статусы
+
                 </a>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- Main Content -->
+
     <main class="main-content">
+
         <!-- Dashboard Section -->
+
         <div id="section-dashboard" class="content-section">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Dashboard</h2>
+
                 <button class="btn btn-black btn-sm" onclick="refreshAll()">
+
                     <i class="bi bi-arrow-clockwise"></i> Обновить
+
                 </button>
+
             </div>
 
             <!-- Stats Grid -->
+
             <div class="row mb-4 g-3">
+
                 <div class="col-6 col-md-3">
+
                     <div class="stat-card">
+
                         <div class="text-muted small text-uppercase fw-bold mb-2">Сервисов</div>
+
                         <div class="stat-value" id="stat-services">-</div>
+
                     </div>
+
                 </div>
+
                 <div class="col-6 col-md-3">
+
                     <div class="stat-card">
+
                         <div class="text-muted small text-uppercase fw-bold mb-2">Сайтов</div>
+
                         <div class="stat-value" id="stat-sites">-</div>
+
                     </div>
+
                 </div>
+
                 <div class="col-6 col-md-3">
+
                     <div class="stat-card">
+
                         <div class="text-muted small text-uppercase fw-bold mb-2">Nginx</div>
+
                         <div class="stat-value" id="stat-nginx">-</div>
+
                     </div>
+
                 </div>
+
                 <div class="col-6 col-md-3">
+
                     <div class="stat-card">
+
                         <div class="text-muted small text-uppercase fw-bold mb-2">SSL</div>
+
                         <div class="stat-value" id="stat-ssl">-</div>
+
                     </div>
+
                 </div>
+
             </div>
 
-            <!-- System Metrics -->
             <div class="stat-card">
-                <h5 class="mb-4">Системные ресурсы</h5>
-                <div id="metrics-content">
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status"></div>
-                        <p class="mt-2 text-muted">Загрузка данных...</p>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">Системные ресурсы</h5>
+                    <button class="btn btn-outline-warning btn-sm" onclick="systemCleanup()">
+                        <i class="bi bi-trash"></i> Очистка
+                    </button>
                 </div>
+                <div id="metrics-content">
+
+                    <div class="text-center py-4">
+
+                        <div class="spinner-border text-primary" role="status"></div>
+
+                        <p class="mt-2 text-muted">Загрузка данных...</p>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
         <!-- Services Section -->
+
         <div id="section-services" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Сервисы</h2>
-                <div class="d-flex gap-2">
+
+                <div class="d-flex gap-2 align-items-center">
+                    <div class="form-check form-switch me-2">
+                        <input class="form-check-input" type="checkbox" id="maintenance-toggle" onchange="toggleMaintenance(this.checked)">
+                        <label class="form-check-label fw-bold text-danger" for="maintenance-toggle">Тех. работы</label>
+                    </div>
+                    <button class="btn btn-outline-danger btn-sm border-0 px-2 me-3" onclick="showMaintenanceSettingsModal()" title="Настройки тех. работ">
+                        <i class="bi bi-gear-fill"></i>
+                    </button>
+
                     <button class="btn btn-black btn-sm" onclick="showCreateServiceModal()">
+
                         <i class="bi bi-plus-lg"></i> Создать
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadServices()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
+                </div>
+
+            </div>
+
+            <div id="maintenance-info" class="alert alert-warning mb-3 shadow-sm border-warning-subtle" style="display: none; border-left: 5px solid #ffc107;">
+                <div class="d-flex align-items-center">
+                    <div class="spinner-grow spinner-grow-sm text-warning me-3" role="status"></div>
+                    <div>
+                        <h6 class="alert-heading fw-bold mb-1">Режим тех. работ активен</h6>
+                        <p class="mb-0 small text-dark">
+                            Остановлено сервисов: <span class="fw-bold" id="maintenance-count">0</span>. 
+                            Экономия RAM: <span class="fw-bold" id="maintenance-ram">0 MB</span>.
+                            <span class="ms-2 text-muted italic">(Панель и критические службы работают)</span>
+                        </p>
+                    </div>
                 </div>
             </div>
+
             <div id="services-content"></div>
+
         </div>
 
         <!-- Bots Section -->
+
         <div id="section-bots" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Боты</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showUploadBotModal()">
+
                         <i class="bi bi-upload"></i> Загрузить
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadBots()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div id="bots-content"></div>
+
         </div>
 
         <!-- Proxy Section -->
+
         <div id="section-proxy" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Прокси</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showAddProxyRuleModal()">
+
                         <i class="bi bi-plus-lg"></i> Добавить правило
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadProxyRules()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div class="alert alert-info mb-3">
+
                 <i class="bi bi-info-circle me-2"></i>
+
                 Проксирование через <code>/p/prefix/...</code> — запросы перенаправляются на локальные сервисы ботов
+
             </div>
+
             <div id="proxy-content"></div>
+
         </div>
 
         <!-- Sites Section -->
+
         <div id="section-sites" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Сайты</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showCreateSiteModal()">
+
                         <i class="bi bi-plus-lg"></i> Создать
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadSites()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div id="sites-content"></div>
+
+        </div>
+
+        <!-- Domains Section -->
+
+        <div id="section-domains" class="content-section" style="display: none;">
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
+                <h2 class="h3 mb-0 fw-bold">Управление Доменами (Cloudflare)</h2>
+
+                <div class="d-flex gap-2">
+
+                    <button class="btn btn-outline-secondary btn-sm" onclick="loadDomains()">
+
+                        <i class="bi bi-arrow-clockwise"></i> Обновить
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div id="domains-content"></div>
+
         </div>
 
         <!-- Files Section -->
+
         <div id="section-files" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Файлы</h2>
+
                 <div class="d-flex gap-2 overflow-auto pb-1">
+
                     <select id="file-root-select" class="form-select form-select-sm w-auto" onchange="setFileRoot(this.value)" title="Быстрый выбор корня"></select>
+
                     <button class="btn btn-black btn-sm text-nowrap" onclick="showCreateFolderModal()">
+
                         <i class="bi bi-folder-plus"></i> Папка
+
                     </button>
+
                     <button class="btn btn-black btn-sm text-nowrap" onclick="showCreateFileModal()">
+
                         <i class="bi bi-file-earmark-plus"></i> Файл
+
                     </button>
+
                     <button class="btn btn-black btn-sm text-nowrap" onclick="document.getElementById('file-upload-input').click()">
+
                         <i class="bi bi-upload"></i> Загрузить
+
                     </button>
+
                     <input type="file" id="file-upload-input" style="display: none;" onchange="uploadFile(this)">
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="reloadFiles()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <nav aria-label="breadcrumb">
+
                 <ol class="breadcrumb bg-white p-3 rounded shadow-sm" id="file-breadcrumbs">
+
                     <li class="breadcrumb-item active">/</li>
+
                 </ol>
+
             </nav>
+
             <div id="files-content" class="bg-white rounded shadow-sm p-0"></div>
+
         </div>
 
         <!-- Nginx Section -->
+
         <div id="section-nginx" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Nginx</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showCreateNginxModal()">
+
                         <i class="bi bi-plus-lg"></i> Создать
+
                     </button>
+
                     <button class="btn btn-success btn-sm text-white" onclick="reloadNginx()">
+
                         <i class="bi bi-arrow-repeat"></i> Reload
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadNginx()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div id="nginx-content"></div>
+
         </div>
 
         <!-- SSL Section -->
+
         <div id="section-ssl" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">SSL</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showObtainCertModal()">
+
                         <i class="bi bi-plus-lg"></i> Получить
+
                     </button>
+
                     <button class="btn btn-success btn-sm text-white" onclick="renewAllCerts()">
+
                         <i class="bi bi-arrow-repeat"></i> Обновить все
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadSSL()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div id="ssl-content"></div>
+
         </div>
 
         <!-- Backups Section -->
+
         <div id="section-backups" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Бэкапы</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showCreateBackupModal()">
+
                         <i class="bi bi-plus-lg"></i> Создать
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadBackups()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div id="backups-content"></div>
+
         </div>
 
         <!-- Security Section -->
+
         <div id="section-security" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Безопасность</h2>
+
                 <button class="btn btn-outline-secondary btn-sm" onclick="loadSecurity()">
+
                     <i class="bi bi-arrow-clockwise"></i>
+
                 </button>
+
             </div>
+
             <div id="security-content"></div>
+
         </div>
 
         <!-- Projects Section -->
+
         <div id="section-projects" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Проекты</h2>
+
                 <div class="d-flex gap-2">
+
                     <button class="btn btn-black btn-sm" onclick="showCreateProjectWizardModal()">
+
                         <i class="bi bi-plus-lg"></i> Создать
+
                     </button>
+
                     <button class="btn btn-outline-secondary btn-sm" onclick="loadProjects()">
+
                         <i class="bi bi-arrow-clockwise"></i>
+
                     </button>
+
                 </div>
+
             </div>
+
             <div id="projects-content"></div>
+
         </div>
 
-        <!-- Console Section -->
-        <div id="section-console" class="content-section" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <h2 class="h3 mb-0 fw-bold">Консоль</h2>
-                <button class="btn btn-outline-secondary btn-sm" onclick="clearConsoleOutput()">
-                    <i class="bi bi-trash"></i> Очистить
+                
+        <!-- Settings Section -->
+        <div id="section-settings" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0 fw-bold">Настройки панели</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-12 col-lg-6">
+                    <div class="stat-card h-100">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-shield-lock"></i> Безопасность</h5>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="setting-login-enabled">
+                            <label class="form-check-label" for="setting-login-enabled">
+                                <strong>Вход по логину и паролю</strong><br>
+                                <span class="small text-muted">Если выключить, вход будет доступен только через Telegram SSO.</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="stat-card h-100">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-bell"></i> Уведомления (Telegram Bot)</h5>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="setting-alerts-enabled">
+                            <label class="form-check-label" for="setting-alerts-enabled">
+                                <strong>Включить тревоги</strong><br>
+                                <span class="small text-muted">Уведомления о падении сервисов и высокой нагрузке.</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="setting-bot-enabled">
+                            <label class="form-check-label" for="setting-bot-enabled">
+                                <strong>Telegram-бот включён</strong><br>
+                                <span class="small text-muted">Если выключено, бот не опрашивает обновления (вступает в силу после перезапуска сервиса).</span>
+                            </label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Токен бота</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control font-monospace" id="setting-bot-token" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="toggleBotTokenVisibility()">
+                                    <i class="bi bi-eye" id="setting-bot-token-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="stat-card">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-activity"></i> Публичная страница статуса (/status)</h5>
+                        
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" id="setting-status-page-enabled">
+                            <label class="form-check-label" for="setting-status-page-enabled">
+                                <strong>Включить публичную страницу статуса</strong><br>
+                                <span class="small text-muted">Если выключено, страница /status будет отдавать 404.</span>
+                            </label>
+                        </div>
+
+                        <div id="status-page-config" style="display: none;">
+                            <label class="form-label fw-bold mb-2">Выберите сервисы для отображения:</label>
+                            <div id="status-services-list" class="list-group list-group-flush border rounded overflow-auto" style="max-height: 400px;">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                                    <p class="small text-muted mt-2">Загрузка сервисов...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button class="btn btn-primary" onclick="savePanelSettings()">
+                    <i class="bi bi-save"></i> Сохранить настройки
                 </button>
             </div>
-            <div class="stat-card">
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Команда</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control font-monospace" id="console-input" placeholder="ls -la /var/www" onkeypress="if(event.key==='Enter')runConsoleCommand()">
-                        <button class="btn btn-black" onclick="runConsoleCommand()">
-                            <i class="bi bi-play-fill"></i> Выполнить
-                        </button>
+        </div>
+<!-- Console Section -->
+
+        <div id="section-console" class="content-section" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h2 class="h3 mb-0 fw-bold">Консоль (Interactive)</h2>
+                <div class="d-flex gap-2 align-items-center">
+                    <div class="input-group input-group-sm" style="width: auto;">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-zoom-in"></i></span>
+                        <select class="form-select border-start-0" id="console-scale" onchange="updateConsoleScale(this.value)" style="width: 100px;">
+                            <option value="1.0">100%</option>
+                            <option value="0.9">90%</option>
+                            <option value="0.8" selected>80%</option>
+                            <option value="0.7">70%</option>
+                            <option value="0.6">60%</option>
+                            <option value="0.5">50%</option>
+                        </select>
                     </div>
-                    <div class="form-text">Введите команду для выполнения на сервере. Будьте осторожны!</div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Вывод</label>
-                    <pre id="console-output" class="bg-dark text-light p-3 rounded font-monospace" style="min-height: 400px; max-height: 70vh; overflow: auto; font-size: 12px; white-space: pre-wrap;">Введите команду и нажмите "Выполнить"</pre>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="document.getElementById('terminal-frame').contentWindow.location.reload();">
+                        <i class="bi bi-arrow-clockwise"></i> Перезапустить
+                    </button>
                 </div>
             </div>
+
+            <div class="stat-card p-0 overflow-hidden bg-black" style="height: 75vh; border-radius: 12px; position: relative;">
+                <div id="terminal-wrapper" style="width: 100%; height: 100%; transform-origin: top left; transform: scale(0.8); width: 125%; height: 125%;">
+                    <iframe id="terminal-frame" src="/console-pty/" style="width: 100%; height: 100%; border: none; background: #000;"></iframe>
+                </div>
+            </div>
+            
+            <script>
+                function updateConsoleScale(scale) {
+                    const wrapper = document.getElementById('terminal-wrapper');
+                    if (!wrapper) return;
+                    const invScale = 1 / parseFloat(scale);
+                    wrapper.style.transform = `scale(${scale})`;
+                    wrapper.style.width = (invScale * 100) + '%';
+                    wrapper.style.height = (invScale * 100) + '%';
+                }
+                // Initial call to set default 80% scale
+                document.addEventListener('DOMContentLoaded', () => {
+                    const scaleEl = document.getElementById('console-scale');
+                    if (scaleEl) updateConsoleScale(scaleEl.value);
+                });
+            </script>
         </div>
 
         <!-- Microservices Section -->
+        {% if microservices_enabled %}
         <div id="section-microservices" class="content-section" style="display: none;">
+
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
                 <h2 class="h3 mb-0 fw-bold">Микросервисы</h2>
-                <button class="btn btn-black btn-sm" onclick="refreshIconsProjects()">
-                    <i class="bi bi-arrow-clockwise"></i> Обновить
+
+                <button class="btn btn-black btn-sm" onclick="refreshMicroservices()">
+
+                    <i class="bi bi-arrow-clockwise"></i> Обновить всё
+
                 </button>
+
+            </div>
+
+            <!-- Dream API Projects Section -->
+
+            <div class="stat-card mb-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+
+                    <div>
+
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-grid-3x3-gap-fill"></i> API Проекты — управление каталогом</h5>
+
+                        <small class="text-muted">projects.json · status.json</small>
+
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+
+                        <!-- Статус сервиса -->
+
+                        <div id="api-status-badge" class="d-flex align-items-center gap-2">
+
+                            <span class="badge bg-secondary">Загрузка...</span>
+
+                        </div>
+
+                        <button class="btn btn-outline-secondary btn-sm" onclick="showStatusModal()">
+
+                            <i class="bi bi-toggles"></i> Статус
+
+                        </button>
+
+                        <button class="btn btn-primary btn-sm" onclick="showAddProjectModal()">
+
+                            <i class="bi bi-plus-circle"></i> Добавить проект
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- Project Cards Grid -->
+
+                <div id="api-projects-container">
+
+                    <div class="text-center py-5">
+
+                        <div class="spinner-border text-primary" role="status">
+
+                            <span class="visually-hidden">Загрузка...</span>
+
+                        </div>
+
+                        <p class="mt-3 text-muted">Загрузка проектов...</p>
+
+                    </div>
+
+                </div>
+
             </div>
 
             <!-- Icons API Section -->
+
             <div class="stat-card mb-4">
+
                 <div class="d-flex justify-content-between align-items-center mb-3">
+
                     <h5 class="mb-0 fw-bold"><i class="bi bi-image"></i> Icons API - Управление иконками</h5>
+
                     <button class="btn btn-primary btn-sm" onclick="showCreateIconProjectModal()">
+
                         <i class="bi bi-plus-circle"></i> Создать проект
+
                     </button>
+
                 </div>
-                
+
                 <div id="icons-projects-container">
+
                     <div class="text-center py-5">
+
                         <div class="spinner-border text-primary" role="status">
+
                             <span class="visually-hidden">Загрузка...</span>
+
                         </div>
+
                         <p class="mt-3 text-muted">Загрузка проектов...</p>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+        {% endif %}
+
+        <!-- Modal: Change API Status -->
+
+        <div class="modal fade" id="statusModal" tabindex="-1">
+
+            <div class="modal-dialog modal-sm">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title fw-bold"><i class="bi bi-toggles"></i> Статус API</h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <p class="text-muted small mb-3">Выберите статус для публичного API сайта и укажите контакт для связи</p>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Telegram Контакт</label>
+                            <div class="input-group">
+                                <span class="input-group-text">@</span>
+                                <input type="text" id="api-status-contact" class="form-control" placeholder="dreamcatch_r">
+                            </div>
+                            <div class="form-text">Этот контакт будет отображаться на странице /dev</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+
+                            <button class="btn btn-success btn-sm" onclick="setApiStatus('available')">
+
+                                <i class="bi bi-check-circle-fill me-1"></i> available — работает
+
+                            </button>
+
+                            <button class="btn btn-warning btn-sm text-dark" onclick="setApiStatus('maintenance')">
+
+                                <i class="bi bi-tools me-1"></i> maintenance — тех. работы
+
+                            </button>
+
+                            <button class="btn btn-danger btn-sm" onclick="setApiStatus('unavailable')">
+
+                                <i class="bi bi-x-circle-fill me-1"></i> unavailable — недоступен
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Modal: Add / Edit Project -->
+
+        <div class="modal fade" id="projectModal" tabindex="-1">
+
+            <div class="modal-dialog modal-lg">
+
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title fw-bold" id="projectModalTitle"><i class="bi bi-plus-circle"></i> Добавить проект</h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <input type="hidden" id="proj-edit-id">
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">ID проекта <span class="text-danger">*</span></label>
+
+                                <input type="text" class="form-control" id="proj-id" placeholder="dreamcloud">
+
+                                <div class="form-text">Уникальный идентификатор (без пробелов)</div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">Название <span class="text-danger">*</span></label>
+
+                                <input type="text" class="form-control" id="proj-title" placeholder="dreamCloud">
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">Описание</label>
+
+                                <input type="text" class="form-control" id="proj-desc" placeholder="облачное хранилище данных">
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="proj-hidden">
+                                    <label class="form-check-label fw-semibold" for="proj-hidden">Скрыть сервис (API не будет его отображать)</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="proj-dreamid">
+                                    <label class="form-check-label fw-semibold" for="proj-dreamid">Отображать в dreamID (auth.dreampartners.online)</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">URL</label>
+
+                                <input type="text" class="form-control" id="proj-url" placeholder="https://cloud.dreampartners.online">
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">Иконка (Font Awesome)</label>
+
+                                <div class="input-group mb-2">
+
+                                    <span class="input-group-text" id="proj-icon-preview-wrap">
+
+                                        <i id="proj-icon-preview" class="fa-solid fa-question fa-fw"></i>
+
+                                    </span>
+
+                                    <input type="text" class="form-control" id="proj-icon" placeholder="cloud" oninput="updateIconPreview()">
+
+                                    <button class="btn btn-outline-secondary" type="button" onclick="toggleIconPicker()">
+
+                                        <i class="bi bi-grid-3x3"></i> Выбрать
+
+                                    </button>
+
+                                </div>
+
+                                <div class="form-text">Имя иконки Font Awesome (без префикса fa-), например: <code>cloud</code>, <code>robot</code>, <code>globe</code></div>
+
+                                <!-- Icon Picker Grid -->
+
+                                <div id="icon-picker-grid" style="display:none;" class="border rounded p-2 mt-2">
+
+                                    <div class="mb-2">
+
+                                        <input type="text" class="form-control form-control-sm" id="icon-search" placeholder="Поиск иконки..." oninput="filterIcons()">
+
+                                    </div>
+
+                                    <div id="icon-grid" class="d-flex flex-wrap gap-1" style="max-height:220px;overflow-y:auto;"></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+
+                        <button type="button" class="btn btn-black" id="projectModalSaveBtn" onclick="saveProject()">
+
+                            <i class="bi bi-check-lg"></i> Сохранить
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </main>
 
     <!-- Modals Container -->
+
     <div id="modal-container"></div>
-    
+
     <!-- Toast Container -->
+
     <div class="toast-container position-fixed top-0 end-0 p-3"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-    <script src="{{ url_for('static', filename='icons_manager.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/shell/shell.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/php/php.min.js"></script>
-    <script src="/static/js/admin_bootstrap.js"></script>
-</body>
-</html>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+
+    <script src="{{ url_for('static', filename='icons_manager.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='projects_manager.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/shell/shell.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/php/php.min.js"></script>
+
+    <script>window.PANEL_CONFIG = {{ panel_paths|tojson }};</script>
+    <script src="/static/js/admin_bootstrap.js"></script>
+
+</body>
+
+</html>

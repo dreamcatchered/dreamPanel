@@ -7,11 +7,31 @@ Deploy on any server to get a clean web dashboard for controlling systemd servic
 ## Features
 
 - systemd service management (start / stop / restart / status / logs)
-- File manager with web editor
-- Nginx proxy configurator
+- File manager with web editor (allowlist-based read/write roots)
+- Nginx proxy & static site configurator with path-based proxy rules
 - SSL certificate management (certbot integration)
-- Telegram bot for remote control
-- DreamID SSO authentication
+- Backup system (full-server bundles or per-site/per-project archives)
+- Telegram bot manager: deploy, run and monitor multiple bots from the panel
+- Cloudflare DNS records management (`app_cloudflare.py`, token via env)
+- Projects catalog ("microservices") driven by a JSON data directory
+- Public status page + interactive web console presets
+- DreamID SSO authentication and Telegram WebApp login
+- Demo mode (`/demo`) with static demo data
+
+## Security
+
+This release includes a security audit pass. Summary of the hardening:
+
+- **No hardcoded credentials.** All secrets (bot tokens, admin password, Flask `SECRET_KEY`, SSO `client_secret`, Cloudflare API token) are read exclusively from environment variables. `env.example` contains placeholders only.
+- **No default admin password.** If `ADMIN_PASSWORD`/`ADMIN_PASSWORD_HASH` are not set, a random temporary password is generated at startup and printed once to the console.
+- **Password hashing.** Form login verifies against a Werkzeug password hash; set `ADMIN_PASSWORD_HASH` to avoid storing plaintext passwords in `.env`.
+- **Hardened session cookies.** `HttpOnly`, `Secure`, `SameSite=Lax`, 1-hour lifetime. `SECRET_KEY` falls back to a per-process random value instead of a constant.
+- **Rate limiting** via flask-limiter on all routes.
+- **Security headers** on every response: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`.
+- **File manager sandboxing.** Explicit write/read root allowlists with symlink-safe path resolution; full-filesystem read access is opt-in via `FILE_MANAGER_ALLOW_READ_ALL`.
+- **Backups stored outside the application directory**, configurable via `BACKUPS_DIR`.
+- **Server paths are not hardcoded in the frontend.** The panel injects configured directories (projects/bots/backups) into the UI dynamically; defaults are derived from the user's home directory and overridable via `PROJECTS_DIR`/`BOTS_DIR`.
+- Runtime state (sessions, logs, uploads, databases, `settings.json`) is excluded from version control.
 
 ## Stack
 
@@ -34,9 +54,14 @@ python run.py
 ```env
 TELEGRAM_BOT_TOKEN=your_bot_token
 ADMIN_TELEGRAM_ID=your_telegram_id
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD_HASH=your_werkzeug_password_hash
 DREAMID_CLIENT_SECRET=your_sso_secret
+CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
 SECRET_KEY=your_flask_secret
 ```
+
+See `env.example` for the full list of supported variables (ports, alerts, backup paths, file manager limits, etc.).
 
 ## Contact
 

@@ -1,45 +1,38 @@
+# Secrets
+.env
+.env.*
+!.env.example
+settings.json
+proxy_rules.json
+/etc/admin_bot.env
+
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-venv/
-env/
+*.egg-info/
 .venv/
+venv/
 
-# Environment
-.env
+# Sessions / runtime
+sessions/
+logs/
+uploads/
+backups/
+*.session
 
-# Databases
+# Databases / state
 *.db
 *.sqlite
 *.sqlite3
-instance/
 
-# Logs
-*.log
+# Backups / old copies
+*.bak
+*.bak_*
+*.tar.gz
 
-# Sessions & auth
-*.session
-*.session-journal
-admin_sessions/
-sessions/
-
-# Uploads & temp
-uploads/
-temp_uploads/
-
-# Cookies
-*cookies.txt
-
-# Secrets & sensitive
-registration_results.json
-proxy_rules.json
-
-# OS
+# OS / editor
 .DS_Store
 Thumbs.db
-
-# IDE
 .idea/
 .vscode/
-
+*.swp

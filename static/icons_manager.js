@@ -1,4 +1,4 @@
-// Icons API Management
+﻿// Icons API Management
 // Управление иконками через админ-панель
 
 let iconsProjects = [];
@@ -7,7 +7,7 @@ let iconsProjects = [];
 async function refreshIconsProjects() {
     const container = document.getElementById('icons-projects-container');
     if (!container) return;
-    
+
     container.innerHTML = `
         <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
@@ -16,11 +16,11 @@ async function refreshIconsProjects() {
             <p class="mt-3 text-muted">Загрузка проектов...</p>
         </div>
     `;
-    
+
     try {
         const response = await fetch('/api/icons/projects');
         const data = await response.json();
-        
+
         if (response.ok && data.projects) {
             iconsProjects = data.projects;
             renderIconsProjects(data.projects);
@@ -43,7 +43,7 @@ async function refreshIconsProjects() {
 // Отрисовка проектов
 function renderIconsProjects(projects) {
     const container = document.getElementById('icons-projects-container');
-    
+
     if (!projects || projects.length === 0) {
         container.innerHTML = `
             <div class="text-center py-5">
@@ -53,7 +53,7 @@ function renderIconsProjects(projects) {
         `;
         return;
     }
-    
+
     const projectsHTML = projects.map(project => `
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm hover-shadow">
@@ -78,7 +78,7 @@ function renderIconsProjects(projects) {
                             </ul>
                         </div>
                     </div>
-                    
+
                     <!-- Preview Grid -->
                     <div class="row g-2 mb-3">
                         <div class="col-4">
@@ -106,7 +106,7 @@ function renderIconsProjects(projects) {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="small text-muted">
                         <i class="bi bi-clock"></i> ${project.last_modified || 'Неизвестно'}
                     </div>
@@ -119,7 +119,7 @@ function renderIconsProjects(projects) {
             </div>
         </div>
     `).join('');
-    
+
     container.innerHTML = `<div class="row g-3">${projectsHTML}</div>`;
 }
 
@@ -166,11 +166,11 @@ function showCreateIconProjectModal() {
             </div>
         </div>
     `;
-    
+
     document.getElementById('modal-container').innerHTML = modalHTML;
     const modalElement = document.getElementById('createIconProjectModal');
     const modal = new bootstrap.Modal(modalElement);
-    
+
     // Fix backdrop cleanup
     modalElement.addEventListener('hidden.bs.modal', function handler() {
         setTimeout(() => {
@@ -181,9 +181,9 @@ function showCreateIconProjectModal() {
         }, 10);
         modalElement.removeEventListener('hidden.bs.modal', handler);
     });
-    
+
     modal.show();
-    
+
     // Preview on file select
     document.getElementById('iconProjectFile').addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -203,24 +203,24 @@ async function createIconProject() {
     const name = document.getElementById('iconProjectName').value.trim();
     const fileInput = document.getElementById('iconProjectFile');
     const file = fileInput.files[0];
-    
+
     if (!name || !file) {
         showToast('Заполните все поля', 'warning');
         return;
     }
-    
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('logo_file', file);
-    
+
     try {
         const response = await fetch('/api/icons/projects', {
             method: 'POST',
             body: formData
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             showToast(`Проект "${name}" успешно создан!`, 'success');
             bootstrap.Modal.getInstance(document.getElementById('createIconProjectModal')).hide();
@@ -270,11 +270,11 @@ function showUpdateIconProjectModal(projectName) {
             </div>
         </div>
     `;
-    
+
     document.getElementById('modal-container').innerHTML = modalHTML;
     const modalElement = document.getElementById('updateIconProjectModal');
     const modal = new bootstrap.Modal(modalElement);
-    
+
     // Fix backdrop cleanup
     modalElement.addEventListener('hidden.bs.modal', function handler() {
         setTimeout(() => {
@@ -285,9 +285,9 @@ function showUpdateIconProjectModal(projectName) {
         }, 10);
         modalElement.removeEventListener('hidden.bs.modal', handler);
     });
-    
+
     modal.show();
-    
+
     // Preview on file select
     document.getElementById('updateIconProjectFile').addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -307,23 +307,23 @@ async function updateIconProject() {
     const name = document.getElementById('updateIconProjectName').value;
     const fileInput = document.getElementById('updateIconProjectFile');
     const file = fileInput.files[0];
-    
+
     if (!file) {
         showToast('Выберите файл', 'warning');
         return;
     }
-    
+
     const formData = new FormData();
     formData.append('logo_file', file);
-    
+
     try {
         const response = await fetch(`/api/icons/projects/${encodeURIComponent(name)}`, {
             method: 'PUT',
             body: formData
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             showToast(`Проект "${name}" успешно обновлен!`, 'success');
             bootstrap.Modal.getInstance(document.getElementById('updateIconProjectModal')).hide();
@@ -341,14 +341,14 @@ async function deleteIconProject(projectName) {
     if (!confirm(`Вы уверены, что хотите удалить проект "${projectName}"? Это действие необратимо.`)) {
         return;
     }
-    
+
     try {
         const response = await fetch(`/api/icons/projects/${encodeURIComponent(projectName)}`, {
             method: 'DELETE'
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             showToast(`Проект "${projectName}" успешно удален!`, 'success');
             refreshIconsProjects();
@@ -365,12 +365,12 @@ async function viewIconProject(projectName) {
     try {
         const response = await fetch(`/api/icons/projects/${encodeURIComponent(projectName)}/info`);
         const data = await response.json();
-        
+
         if (!response.ok) {
             showToast(`Ошибка: ${data.error || 'Не удалось загрузить информацию'}`, 'danger');
             return;
         }
-        
+
         showProjectDetailsModal(projectName, data);
     } catch (error) {
         showToast(`Ошибка: ${error.message}`, 'danger');
@@ -380,7 +380,7 @@ async function viewIconProject(projectName) {
 // Модальное окно с детальной информацией о проекте
 async function showProjectDetailsModal(projectName, data) {
     const baseUrl = 'https://api.dreampartners.online/icons';
-    
+
     // Получаем информацию о загруженных файлах
     let uploadedFiles = {};
     try {
@@ -392,7 +392,7 @@ async function showProjectDetailsModal(projectName, data) {
     } catch (e) {
         console.error('Failed to load files info:', e);
     }
-    
+
     // Генерируем HTML для всех типов иконок
     const iconTypes = [
         { title: 'Favicons', items: [
@@ -415,13 +415,13 @@ async function showProjectDetailsModal(projectName, data) {
             { name: 'Twitter Summary (300x300)', url: `${baseUrl}/${projectName}/twitter-summary.png`, size: 120, fileType: 'twitter-summary' },
         ]}
     ];
-    
+
     let sectionsHTML = '';
     iconTypes.forEach(section => {
         const itemsHTML = section.items.map(item => {
             const isUploaded = uploadedFiles[item.fileType]?.exists || false;
             const uploadBadge = isUploaded ? '<span class="badge bg-success position-absolute top-0 end-0 m-1" style="font-size: 0.6rem;">Загружен</span>' : '<span class="badge bg-secondary position-absolute top-0 end-0 m-1" style="font-size: 0.6rem;">Авто</span>';
-            
+
             return `
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="card h-100 icon-card-hover" style="position: relative;">
@@ -449,7 +449,7 @@ async function showProjectDetailsModal(projectName, data) {
                 </div>
             </div>
         `}).join('');
-        
+
         sectionsHTML += `
             <div class="mb-4">
                 <h6 class="fw-bold mb-3">${section.title}</h6>
@@ -457,7 +457,7 @@ async function showProjectDetailsModal(projectName, data) {
             </div>
         `;
     });
-    
+
     const modalHTML = `
         <div class="modal fade" id="projectDetailsModal" tabindex="-1">
             <div class="modal-dialog modal-xl">
@@ -482,9 +482,9 @@ async function showProjectDetailsModal(projectName, data) {
                             </div>
                             ${data.svg?.last_modified ? `<small class="text-muted">Изменен: ${data.svg.last_modified}</small>` : ''}
                         </div>
-                        
+
                         ${sectionsHTML}
-                        
+
                         <!-- Cache Status -->
                         ${data.cache_status ? `
                         <div class="mt-4">
@@ -510,11 +510,11 @@ async function showProjectDetailsModal(projectName, data) {
             </div>
         </div>
     `;
-    
+
     document.getElementById('modal-container').innerHTML = modalHTML;
     const modalElement = document.getElementById('projectDetailsModal');
     const modal = new bootstrap.Modal(modalElement);
-    
+
     // Fix backdrop cleanup
     modalElement.addEventListener('hidden.bs.modal', function handler() {
         setTimeout(() => {
@@ -525,14 +525,14 @@ async function showProjectDetailsModal(projectName, data) {
         }, 10);
         modalElement.removeEventListener('hidden.bs.modal', handler);
     });
-    
+
     // Allow backdrop click to close
     modalElement.addEventListener('click', function(e) {
         if (e.target === modalElement) {
             modal.hide();
         }
     });
-    
+
     modal.show();
 }
 
@@ -540,18 +540,18 @@ async function showProjectDetailsModal(projectName, data) {
 async function uploadIconFile(projectName, fileType, inputElement) {
     const file = inputElement.files[0];
     if (!file) return;
-    
+
     const formData = new FormData();
     formData.append('file', file);
-    
+
     try {
         const response = await fetch(`/api/icons/projects/${encodeURIComponent(projectName)}/files/${fileType}`, {
             method: 'POST',
             body: formData
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             showToast(`Файл ${fileType} успешно загружен!`, 'success');
             // Перезагружаем модальное окно
@@ -566,7 +566,7 @@ async function uploadIconFile(projectName, fileType, inputElement) {
     } catch (error) {
         showToast(`Ошибка: ${error.message}`, 'danger');
     }
-    
+
     // Очищаем input
     inputElement.value = '';
 }
@@ -576,14 +576,14 @@ async function deleteIconFile(projectName, fileType) {
     if (!confirm(`Удалить загруженный файл ${fileType}? После удаления будет использоваться автоматически сгенерированная версия из SVG.`)) {
         return;
     }
-    
+
     try {
         const response = await fetch(`/api/icons/projects/${encodeURIComponent(projectName)}/files/${fileType}`, {
             method: 'DELETE'
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             showToast(`Файл ${fileType} успешно удален!`, 'success');
             // Перезагружаем модальное окно
@@ -605,14 +605,14 @@ async function clearProjectCache(projectName) {
     if (!confirm(`Очистить кэш для проекта "${projectName}"? Иконки будут пересозданы при следующем запросе.`)) {
         return;
     }
-    
+
     try {
         const response = await fetch(`/api/icons/projects/${encodeURIComponent(projectName)}/cache`, {
             method: 'DELETE'
         });
-        
+
         const data = await response.json();
-        
+
         if (response.ok) {
             showToast(`Кэш проекта "${projectName}" очищен! Удалено файлов: ${data.deleted_files || 0}`, 'success');
             // Перезагружаем модальное окно для обновления информации

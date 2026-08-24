@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход - dreamPanel</title>
+    <title>Вход - Панель управления</title>
     <!-- Favicon и иконки через API -->
     <link rel="icon" type="image/x-icon" href="https://api.dreampartners.online/icons/dreampanel/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="https://api.dreampartners.online/icons/dreampanel/favicon-16x16.png">
@@ -107,45 +107,6 @@
             background: #000;
         }
 
-        .btn-dreamid {
-            width: 100%;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #1a1a1a;
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 12px;
-        }
-
-        .btn-dreamid:hover {
-            background: #f5f5f5;
-            border-color: #1a1a1a;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 24px 0;
-            color: #999;
-            font-size: 13px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .divider span {
-            padding: 0 12px;
-        }
-
         .error-message {
             margin-top: 16px;
             padding: 12px;
@@ -161,6 +122,17 @@
             display: block;
         }
 
+        .demo-badge {
+            margin-top: 16px;
+            padding: 8px 12px;
+            background: #f0f7ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            color: #0066cc;
+            font-size: 12px;
+            text-align: center;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 padding: 32px 24px;
@@ -171,79 +143,47 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>🚀 dreamPanel</h1>
+            <h1>Панель управления</h1>
             <p>Войдите для доступа к системе</p>
         </div>
 
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Имя пользователя</label>
-                <input type="text" id="username" name="username" required autocomplete="username">
+                <input type="text" id="username" name="username" required autocomplete="username" value="admin">
             </div>
 
             <div class="form-group">
                 <label for="password">Пароль</label>
-                <input type="password" id="password" name="password" required autocomplete="current-password">
+                <input type="password" id="password" name="password" required autocomplete="current-password" value="demo">
             </div>
 
             <button type="submit" class="btn">Войти</button>
 
             <div class="error-message" id="errorMessage"></div>
+
+            <div class="demo-badge">
+                🎭 Демо-версия панели управления
+            </div>
         </form>
-
-        <div class="divider">
-            <span>или</span>
-        </div>
-
-        <a href="/login/dreamid" class="btn-dreamid" style="display: block; text-align: center; text-decoration: none;">
-            🔐 Войти через DreamID
-        </a>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // Проверяем авторизацию через Telegram WebApp
-        if (window.Telegram && window.Telegram.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
-            tg.expand();
-
-            const initData = tg.initData;
-            if (initData) {
-                // Отправляем initData на сервер для проверки
-                fetch('/login?tgWebAppData=' + encodeURIComponent(initData))
-                    .then(response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                        }
-                    })
-                    .catch(err => console.error('Ошибка авторизации:', err));
-            }
-        }
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const formData = new FormData(e.target);
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.classList.remove('show');
 
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    window.location.href = data.redirect || '/dashboard';
-                } else {
-                    errorDiv.textContent = data.error || 'Ошибка входа';
-                    errorDiv.classList.add('show');
-                }
-            } catch (error) {
-                errorDiv.textContent = 'Ошибка соединения';
+            // Простая проверка для демо (любой пароль подходит)
+            if (username === 'admin') {
+                // Сохраняем в sessionStorage для демо
+                sessionStorage.setItem('authenticated', 'true');
+                window.location.href = '/demo/dashboard.html';
+            } else {
+                errorDiv.textContent = 'Неверное имя пользователя';
                 errorDiv.classList.add('show');
             }
         });
